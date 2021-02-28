@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Comp.Movel</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Mapa</string>
+    <string name="title_dashboard">Novo Incidente</string>
+    <string name="title_notifications">Minhas Notas</string>
     <string name="title_activity_login">LoginActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
