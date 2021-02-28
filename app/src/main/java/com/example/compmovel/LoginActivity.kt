@@ -37,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+
         val service = retrofit.create(ApiService::class.java)
         val call = service.login(username = username, password = password)
 
@@ -48,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 if (response.code() == 401) {
-                    showToast("Os dados de login estão incorretos !")
+                    showToast("Os dados de login estão incorretos!")
                 }
 
             }
