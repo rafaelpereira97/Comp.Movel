@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.compmovel.R
@@ -14,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -43,16 +45,29 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
 
-    @SuppressLint("MissingPermission")
     override fun onMapReady(map: GoogleMap?) {
         map?.apply {
-            val sydney = LatLng(-33.852, 151.211)
+            val viana = LatLng(41.691807, -8.834451)
             addMarker(
                 MarkerOptions()
-                    .position(sydney)
-                    .title("Marker in Sydney")
+                    .position(viana)
+                    .title("Viana centro")
+                    .snippet("Buraco muito fundo na estrada !")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.warning))
             )
+
+
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(41.691807, -8.834451), 12f))
+
+
+            map.setOnMarkerClickListener { marker ->
+                if (marker.isInfoWindowShown) {
+                    marker.hideInfoWindow()
+                } else {
+                    marker.showInfoWindow()
+                }
+                true
+            }
         }
     }
 }
