@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -35,20 +36,24 @@ class NotificationsFragment : Fragment() {
                 .build()
         }
 
+        //val nota = Notes(7,"Teste nota","teste descricao","12312","32232","20/02/2021")
+        //db?.notesDao()?.insertAll(nota)
+
+
         val notes = db?.notesDao()?.getAll()
 
         val localNotesRecyclerView = root.findViewById<RecyclerView>(R.id.localNotesRecyclerView)
 
         localNotesRecyclerView.apply {
-            layoutManager = LinearLayoutManager(activity)
+            layoutManager = LinearLayoutManager(context)
             adapter = LocalNotesAdapter(notes as ArrayList<Notes>?)
+            itemAnimator = DefaultItemAnimator()
         }
 
+
+
+
         db?.close()
-
-        //val notes = Notes(2,"Teste nota","teste descricao","12312","32232","20/02/2021")
-
-        //db?.notesDao()?.insertAll(notes)
 
         return root
     }
