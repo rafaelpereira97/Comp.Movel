@@ -1,10 +1,15 @@
 package com.example.compmovel.ui.home
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.location.Location
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.compmovel.R
@@ -48,7 +53,20 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         map?.apply {
 
-            createMarker(41.691807,-8.834451,"Viana","Cuidado! Buraco muito fundo na estrada !",map)
+            createMarker(
+                41.691807,
+                -8.834451,
+                "Viana",
+                "Cuidado! Buraco muito fundo na estrada !",
+                map
+            )
+            createMarker(
+                42.691807,
+                -8.834451,
+                "Viana",
+                "Cuidado! Buraco muito fundo na estrada !",
+                map
+            )
 
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(41.691807, -8.834451), 12f))
 
@@ -61,10 +79,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 }
                 true
             }
+
         }
     }
 
-    protected fun createMarker(
+    private fun createMarker(
         latitude: Double,
         longitude: Double,
         title: String?,
@@ -72,12 +91,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         map: GoogleMap?
     ): Marker? {
         val marker = map?.addMarker(
-                MarkerOptions()
-                    .position(LatLng(latitude,longitude))
-                    .title(title)
-                    .snippet(snippet)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.warning))
-                )
+            MarkerOptions()
+                .position(LatLng(latitude, longitude))
+                .title(title)
+                .snippet(snippet)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.warning))
+        )
+        marker?.tag = "teste"
         return marker
     }
 
