@@ -36,6 +36,7 @@ class NotificationsFragment : Fragment() {
                 .build()
         }
 
+
         //val nota = Notes(7,"Teste nota","teste descricao","12312","32232","20/02/2021")
         //db?.notesDao()?.insertAll(nota)
 
