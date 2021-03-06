@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/noteTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/primaryColor"
+        android:hint="Titulo da Nota"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/noteDescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/primaryColor"
+        android:hint="Descrição da Nota"
+        android:inputType="textMultiLine"
+        android:lines="10"/>
+
+    <Button
+        android:id="@+id/addLocalNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/primaryColor"
+        android:elevation="4dp"
+        android:paddingLeft="70dp"
+        android:paddingRight="70dp"
+        android:text="Adicionar Nota"
+        android:textColor="#fff"
+        android:layout_marginTop="10dp"/>
+
+
+</LinearLayout>
