@@ -1,9 +1,11 @@
 package com.example.compmovel
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.compmovel.local.Notes
 
@@ -16,9 +18,14 @@ class LocalNotesAdapter(private val dataSet: ArrayList<Notes>?) :
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.noteTitle)
+        val noteDescription: TextView = view.findViewById(R.id.noteDescription)
 
         init {
-            // Define click listener for the ViewHolder's View.
+            itemView.setOnClickListener {
+                println(itemView.findViewById<TextView>(R.id.noteTitle).text)
+                val intent = Intent(view.context, EditNoteActivity::class.java)
+                view.context.startActivity(intent)
+            }
         }
     }
 
@@ -37,9 +44,14 @@ class LocalNotesAdapter(private val dataSet: ArrayList<Notes>?) :
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.textView.text = dataSet!![position].note
+        viewHolder.noteDescription.text = dataSet[position].description
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet!!.size
 
+    fun removeAt(position: Int) {
+        dataSet!!.removeAt(position)
+        notifyItemRemoved(position)
+    }
 }
