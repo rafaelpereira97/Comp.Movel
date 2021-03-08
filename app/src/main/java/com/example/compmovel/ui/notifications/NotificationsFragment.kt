@@ -91,13 +91,14 @@ class NotificationsFragment : Fragment() {
 
         return context?.let {
             Room.databaseBuilder(
-                it,
-                AppDatabase::class.java, "notesdb"
+                    it,
+                    AppDatabase::class.java, "notesdb"
             )
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build()
+                    .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
+                    .build()
         }
 
     }
+
 }
