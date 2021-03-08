@@ -1,9 +1,10 @@
 package com.example.compmovel.ui.notifications
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -56,15 +57,32 @@ class NotificationsFragment : Fragment() {
     private fun swipeToDelete(recyclerView: RecyclerView){
         val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val adapter = recyclerView.adapter as LocalNotesAdapter
 
-                val db = openDbConnection()
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setMessage("Tem a certeza que pertende apagar a Nota ?")
+                        .setCancelable(false)
+                        .setPositiveButton("Sim") { dialog, id ->
+                            val adapter = recyclerView.adapter as LocalNotesAdapter
 
-                db?.notesDao()?.deleteNote(viewHolder.itemView.findViewById<TextView>(R.id.noteTitle).text as String)
+                            try {
+                                val db = openDbConnection()
 
-                db?.close()
+                                adapter.getNoteId(viewHolder.adapterPosition)?.let {
+                                    db?.notesDao()?.deleteNote(it)
+                                }
+                                adapter.removeAt(viewHolder.adapterPosition)
 
-                adapter.removeAt(viewHolder.adapterPosition)
+                                db?.close()
+                            }catch (e: Exception){
+                                Toast.makeText(requireContext(),e.toString(),Toast.LENGTH_LONG).show()
+                            }
+                        }
+                        .setNegativeButton("Não") { dialog, id ->
+                            dialog.dismiss()
+                        }
+                val alert = builder.create()
+                alert.show()
+
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)

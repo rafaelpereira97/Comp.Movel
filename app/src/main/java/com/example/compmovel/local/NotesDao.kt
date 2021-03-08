@@ -12,7 +12,7 @@ interface NotesDao {
     @Insert
     fun insertAll(vararg notes: Notes)
 
-    @Query("DELETE FROM notes WHERE note = :note")
-    fun deleteNote(note: String)
+    @Query("DELETE FROM notes WHERE uid = :uid")
+    fun deleteNote(uid: Int)
 
 }
