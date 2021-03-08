@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <EditText
         android:id="@+id/noteTitle"
@@ -12,7 +13,8 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/primaryColor"
         android:hint="Titulo da Nota"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/noteDescription"
@@ -21,7 +23,8 @@
         android:backgroundTint="@color/primaryColor"
         android:hint="Descrição da Nota"
         android:inputType="textMultiLine"
-        android:lines="10"/>
+        android:lines="10"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/addLocalNote"

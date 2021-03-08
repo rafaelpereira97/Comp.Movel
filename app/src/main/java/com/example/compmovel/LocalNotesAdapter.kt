@@ -54,4 +54,12 @@ class LocalNotesAdapter(private val dataSet: ArrayList<Notes>?) :
         dataSet!!.removeAt(position)
         notifyItemRemoved(position)
     }
+
+    fun getNoteId(position: Int): Int? {
+        return dataSet!![position].uid
+    }
+
+    fun getNote(position: Int): Notes? {
+        return dataSet!![position]
+    }
 }

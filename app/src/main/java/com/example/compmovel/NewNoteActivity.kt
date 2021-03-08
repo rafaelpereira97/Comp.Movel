@@ -22,9 +22,9 @@ class NewNoteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_note)
         setSupportActionBar(findViewById(R.id.toolbar))
-
         val actionbar = supportActionBar
         actionbar?.setDisplayHomeAsUpEnabled(true)
+        setTitle("Adicionar Nova Nota")
 
         val insertBtn = findViewById<Button>(R.id.addLocalNote)
 
@@ -46,6 +46,7 @@ class NewNoteActivity : AppCompatActivity() {
             db?.notesDao()?.insertAll(nota)
             db?.close()
             Toast.makeText(applicationContext,"Nota Inserida com Sucesso!",Toast.LENGTH_LONG).show()
+            finish()
         }catch (exception: ExceptionInInitializerError){
             Toast.makeText(applicationContext,exception.toString(),Toast.LENGTH_LONG).show()
         }
