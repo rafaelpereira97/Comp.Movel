@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp">
+    android:padding="5dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -11,28 +11,33 @@
         android:id="@+id/cv"
         app:cardBackgroundColor="@color/cardColor"
         app:cardCornerRadius="15dp"
+        app:cardUseCompatPadding="true"
         >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="5dp"
             >
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/noteTitle"
                 android:layout_alignParentTop="true"
                 android:textSize="30sp"
+                android:textColor="@color/black"
+                android:text="Nota"
                 />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/noteDescription"
                 android:height="100dp"
+                android:paddingTop="5dp"
                 android:layout_below="@+id/noteTitle"
+                android:text="Descrição da nota ..."
                 />
 
         </RelativeLayout>
