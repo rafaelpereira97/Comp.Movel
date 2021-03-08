@@ -1,18 +1,19 @@
 package com.example.compmovel.ui.home
 
-import android.graphics.Color
-import android.graphics.Typeface
+import android.Manifest
+import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.compmovel.R
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -29,9 +30,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var lastLocation: Location
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -54,22 +55,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         map?.apply {
 
             createMarker(
-                41.691807,
-                -8.834451,
-                "Viana",
-                "Cuidado! Buraco muito fundo na estrada !",
-                map
+                    41.691807,
+                    -8.834451,
+                    "Viana",
+                    "Cuidado! Buraco muito fundo na estrada !",
+                    map
             )
             createMarker(
-                42.691807,
-                -8.834451,
-                "Viana",
-                "Cuidado! Buraco muito fundo na estrada !",
-                map
+                    42.691807,
+                    -8.834451,
+                    "Viana",
+                    "Cuidado! Buraco muito fundo na estrada !",
+                    map
             )
 
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(41.691807, -8.834451), 12f))
-
+            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(41.69323, -8.83287), 12f))
 
             map.setOnMarkerClickListener { marker ->
                 if (marker.isInfoWindowShown) {
@@ -84,21 +84,22 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun createMarker(
-        latitude: Double,
-        longitude: Double,
-        title: String?,
-        snippet: String?,
-        map: GoogleMap?
+            latitude: Double,
+            longitude: Double,
+            title: String?,
+            snippet: String?,
+            map: GoogleMap?
     ): Marker? {
         val marker = map?.addMarker(
-            MarkerOptions()
-                .position(LatLng(latitude, longitude))
-                .title(title)
-                .snippet(snippet)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.warning))
+                MarkerOptions()
+                        .position(LatLng(latitude, longitude))
+                        .title(title)
+                        .snippet(snippet)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.warning))
         )
         marker?.tag = "teste"
         return marker
     }
+
 
 }
