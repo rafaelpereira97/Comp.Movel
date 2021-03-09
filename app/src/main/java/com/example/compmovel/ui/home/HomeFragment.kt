@@ -51,8 +51,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
     override fun onMapReady(map: GoogleMap?) {
-
         map?.apply {
+
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return
+            }
+
+            map.isMyLocationEnabled = true;
 
             createMarker(
                     41.691807,
