@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.whenResumed
 import androidx.room.Room
 import com.example.compmovel.local.AppDatabase
 import com.example.compmovel.local.Notes

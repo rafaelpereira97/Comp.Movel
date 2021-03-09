@@ -21,8 +21,8 @@ class LocalNotesAdapter(private val dataSet: ArrayList<Notes>?) :
         val noteDescription: TextView = view.findViewById(R.id.noteDescription)
 
         init {
-            itemView.setOnClickListener {
-                println(itemView.findViewById<TextView>(R.id.noteTitle).text)
+            view.setOnClickListener {
+                println(view.findViewById<TextView>(R.id.noteTitle).text)
                 val intent = Intent(view.context, EditNoteActivity::class.java)
                 intent.putExtra("NOTE", "nota")
                 view.context.startActivity(intent)

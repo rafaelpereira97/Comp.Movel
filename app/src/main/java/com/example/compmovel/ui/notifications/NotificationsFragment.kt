@@ -12,13 +12,15 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.compmovel.*
 import com.example.compmovel.local.AppDatabase
 import com.example.compmovel.local.Notes
 
-class NotificationsFragment : Fragment() {
+class NotificationsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
 
     private lateinit var notificationsViewModel: NotificationsViewModel
+    private lateinit var localNotesRecyclerView: RecyclerView
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -30,13 +32,22 @@ class NotificationsFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_notifications, container, false)
         setHasOptionsMenu(true)
 
+        localNotesRecyclerView = root.findViewById(R.id.localNotesRecyclerView)
+
+
+        fillList()
+
+        return root
+    }
+
+
+    fun fillList(){
         val db = openDbConnection()
 
         val notes = db?.notesDao()?.getAll()
 
         db?.close()
 
-        val localNotesRecyclerView = root.findViewById<RecyclerView>(R.id.localNotesRecyclerView)
 
         localNotesRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
@@ -47,12 +58,7 @@ class NotificationsFragment : Fragment() {
 
         //puxar para o lado para apagar o item da lista e da BD
         swipeToDelete(localNotesRecyclerView)
-
-
-        return root
     }
-
-
 
 
     private fun swipeToDelete(recyclerView: RecyclerView){
@@ -91,6 +97,11 @@ class NotificationsFragment : Fragment() {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        fillList()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.notesmenu, menu)
     }
@@ -120,4 +131,7 @@ class NotificationsFragment : Fragment() {
 
     }
 
+    override fun onRefresh() {
+        fillList()
+    }
 }
