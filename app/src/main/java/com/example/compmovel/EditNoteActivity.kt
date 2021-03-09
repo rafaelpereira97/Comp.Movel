@@ -12,6 +12,8 @@ class EditNoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_note)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        setTitle("Editar Nota - ")
+
         val actionbar = supportActionBar
         actionbar?.setDisplayHomeAsUpEnabled(true)
     }

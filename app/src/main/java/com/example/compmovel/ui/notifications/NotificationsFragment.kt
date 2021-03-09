@@ -49,9 +49,10 @@ class NotificationsFragment : Fragment() {
         swipeToDelete(localNotesRecyclerView)
 
 
-
         return root
     }
+
+
 
 
     private fun swipeToDelete(recyclerView: RecyclerView){
