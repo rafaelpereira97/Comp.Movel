@@ -1,5 +1,6 @@
 package com.example.compmovel
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -18,6 +19,11 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val sharedPreference = getSharedPreferences("AUTH_PREFERENCES",Context.MODE_PRIVATE)
+        println(sharedPreference.getString("token","defaultName"))
+
+
         setContentView(R.layout.activity_login)
         setSupportActionBar(findViewById(R.id.toolbar))
 
@@ -33,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
 
     fun login(username: String, password: String){
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.0.117:3000")
+            .baseUrl("http://192.168.0.117:8080")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -45,7 +51,13 @@ class LoginActivity : AppCompatActivity() {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
 
                 if (response.code() == 200) {
+                    val sharedPreference = getSharedPreferences("AUTH_PREFERENCES",Context.MODE_PRIVATE)
+                    val editor = sharedPreference.edit()
+                    editor.putString("token",response.body()?.token)
+                    editor.apply()
+
                     startApp()
+                    finish()
                 }
 
                 if (response.code() == 401) {
