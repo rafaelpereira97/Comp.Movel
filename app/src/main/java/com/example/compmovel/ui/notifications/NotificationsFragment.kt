@@ -1,10 +1,13 @@
 package com.example.compmovel.ui.notifications
 
+import android.app.ActivityOptions
 import android.app.AlertDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -106,11 +109,13 @@ class NotificationsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
         inflater.inflate(R.menu.notesmenu, menu)
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.add_localnote -> {
                 val intent = Intent(requireContext(), NewNoteActivity::class.java)
                 requireContext().startActivity(intent)
+                ActivityOptions.makeSceneTransitionAnimation(requireActivity()).toBundle()
                 true
             }
             else -> super.onOptionsItemSelected(item)
