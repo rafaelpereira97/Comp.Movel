@@ -99,7 +99,7 @@ class DashboardFragment : Fragment() {
         val longitude = longitude
 
         val retrofit = Retrofit.Builder()
-                .baseUrl("http://192.168.0.117:8080")
+                .baseUrl("http://192.168.1.102:8080")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 

@@ -5,18 +5,19 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.whenResumed
+import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
-import com.example.compmovel.local.AppDatabase
+import com.example.compmovel.local.NoteRepository
+import com.example.compmovel.local.NoteViewModel
 import com.example.compmovel.local.Notes
 import java.time.LocalDateTime
-import java.util.*
 
 class NewNoteActivity : AppCompatActivity() {
+
+    private lateinit var noteViewModel: NoteViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,18 +41,20 @@ class NewNoteActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun insertNote(noteTitle: String, noteDescription: String){
-        try {
-            val db = openDbConnection()
-            val date = LocalDateTime.now()
-            val nota = Notes(null,noteTitle,noteDescription,"12312","32232",date.toString())
-            db?.notesDao()?.insertAll(nota)
-            db?.close()
-            Toast.makeText(applicationContext,"Nota Inserida com Sucesso!",Toast.LENGTH_LONG).show()
-            finish()
-        }catch (exception: ExceptionInInitializerError){
-            Toast.makeText(applicationContext,exception.toString(),Toast.LENGTH_LONG).show()
+        if(noteTitle != "") {
+            try {
+                val date = LocalDateTime.now()
+                val nota = Notes(null, noteTitle, noteDescription, "12312", "32232", date.toString())
+                noteViewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
+                noteViewModel.insert(nota)
+                Toast.makeText(applicationContext, "Nota Inserida com Sucesso!", Toast.LENGTH_LONG).show()
+                finish()
+            } catch (exception: ExceptionInInitializerError) {
+                Toast.makeText(applicationContext, exception.toString(), Toast.LENGTH_LONG).show()
+            }
+        }else{
+            Toast.makeText(this, "A nota necessita de um título !", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -59,17 +62,4 @@ class NewNoteActivity : AppCompatActivity() {
         return true
     }
 
-    fun openDbConnection(): AppDatabase? {
-
-        return this.let {
-            Room.databaseBuilder(
-                it,
-                AppDatabase::class.java, "notesdb"
-            )
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build()
-        }
-
-    }
 }

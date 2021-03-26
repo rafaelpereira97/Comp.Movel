@@ -6,21 +6,22 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.compmovel.*
-import com.example.compmovel.local.AppDatabase
+import com.example.compmovel.local.NoteViewModel
 import com.example.compmovel.local.Notes
 
-class NotificationsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
+class NotificationsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener,LocalNotesAdapter.LocalNotesAdapterListener {
 
     private lateinit var notificationsViewModel: NotificationsViewModel
     private lateinit var localNotesRecyclerView: RecyclerView
+    private lateinit var noteViewModel: NoteViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -42,18 +43,18 @@ class NotificationsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
 
 
     fun fillList(){
-        val db = openDbConnection()
+        noteViewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
+        val notes = noteViewModel.allNotes
 
-        val notes = db?.notesDao()?.getAll()
+        noteViewModel.allNotes.observe(viewLifecycleOwner, Observer { notes ->
+            val notesList = notes as MutableList<Notes>
+            localNotesRecyclerView.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = context?.let { LocalNotesAdapter(notesList as ArrayList<Notes>, this@NotificationsFragment, it) }
+                itemAnimator = DefaultItemAnimator()
+            }
+        })
 
-        db?.close()
-
-
-        localNotesRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = LocalNotesAdapter(notes as ArrayList<Notes>?)
-            itemAnimator = DefaultItemAnimator()
-        }
 
 
         //puxar para o lado para apagar o item da lista e da BD
@@ -72,14 +73,12 @@ class NotificationsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
                             val adapter = recyclerView.adapter as LocalNotesAdapter
 
                             try {
-                                val db = openDbConnection()
 
                                 adapter.getNoteId(viewHolder.adapterPosition)?.let {
-                                    db?.notesDao()?.deleteNote(it)
+                                    noteViewModel.deleteNote(it)
                                 }
                                 adapter.removeAt(viewHolder.adapterPosition)
 
-                                db?.close()
                             }catch (e: Exception){
                                 Toast.makeText(requireContext(),e.toString(),Toast.LENGTH_LONG).show()
                             }
@@ -117,21 +116,20 @@ class NotificationsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener{
         }
     }
 
-    fun openDbConnection(): AppDatabase? {
-
-        return context?.let {
-            Room.databaseBuilder(
-                    it,
-                    AppDatabase::class.java, "notesdb"
-            )
-                    .allowMainThreadQueries()
-                    .fallbackToDestructiveMigration()
-                    .build()
-        }
-
-    }
 
     override fun onRefresh() {
         fillList()
+    }
+
+    override fun onNoteSelected(note: Notes?) {
+        val intent = Intent(context, EditNoteActivity::class.java).apply {
+            if (note != null) {
+                putExtra("id",note.uid)
+                putExtra("title",note.note)
+                putExtra("description",note.description)
+            }
+        }
+
+        startActivity(intent)
     }
 }
