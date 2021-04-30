@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
 
     fun login(username: String, password: String){
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.102:8080")
+            .baseUrl("http://172.16.188.152:8080/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -51,19 +51,19 @@ class LoginActivity : AppCompatActivity() {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
 
                 if (response.code() == 200) {
-                    val sharedPreference = getSharedPreferences("AUTH_PREFERENCES",Context.MODE_PRIVATE)
-                    val editor = sharedPreference.edit()
-                    editor.putString("token",response.body()?.token)
-                    editor.apply()
+                    if(response.body()?.token != null) {
+                        val sharedPreference =
+                            getSharedPreferences("AUTH_PREFERENCES", Context.MODE_PRIVATE)
+                        val editor = sharedPreference.edit()
+                        editor.putString("token", response.body()?.token)
+                        editor.apply()
 
-                    startApp()
-                    finish()
+                        startApp()
+                        finish()
+                    }else{
+                        showToast("Os dados de login estão incorretos!")
+                    }
                 }
-
-                if (response.code() == 401) {
-                    showToast("Os dados de login estão incorretos!")
-                }
-
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                     println(t.message)
