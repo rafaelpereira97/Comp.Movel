@@ -1,8 +1,11 @@
 package com.example.compmovel.ui.dashboard
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -15,7 +18,9 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.example.cmplacesapp.retrofit.ServiceBuilder
 import com.example.compmovel.R
 import com.example.compmovel.models.ApiService
 import com.example.compmovel.models.InsertincidentResponse
@@ -37,6 +42,8 @@ class DashboardFragment : Fragment() {
 
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
+    private var title: EditText? = null
+    private var description: EditText? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -45,13 +52,14 @@ class DashboardFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
 
-        getLastKnownLocation()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         takePhoto()
 
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        title = root.findViewById<EditText>(R.id.incidentTitle)
+        description = root.findViewById<EditText>(R.id.incidentDescription)
 
         incidentPicture = root.findViewById(R.id.imageView4)
 
@@ -80,7 +88,27 @@ class DashboardFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun saveIncident(inflater: LayoutInflater, container: ViewGroup?){
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        //val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            latitude = location.latitude
+            longitude = location.longitude
 
 
         val bos = ByteArrayOutputStream()
@@ -92,25 +120,20 @@ class DashboardFragment : Fragment() {
 
 
         //Params to send in POST REQUEST
-        val title = root.findViewById<EditText>(R.id.incidentTitle).getText().toString()
-        val description = root.findViewById<EditText>(R.id.incidentDescription).getText().toString()
         val incidentImgBase64 = base64Encoded
         val latitude = latitude
-        val longitude = longitude
+            val sharedPreference = requireActivity().getSharedPreferences("AUTH_PREFERENCES",Context.MODE_PRIVATE)
+            val user_id = sharedPreference.getString("user_id",null)
 
-        val retrofit = Retrofit.Builder()
-                .baseUrl("http://192.168.1.102:8080")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+            val request = ServiceBuilder.buildService(ApiService::class.java)
 
-
-        val service = retrofit.create(ApiService::class.java)
-        val call = service.insertIncident(
-                title = title,
-                description = description,
+            val call = request.insertIncident(
+                title = title?.text.toString(),
+                description = description?.text.toString(),
                 image = incidentImgBase64,
                 latitude = latitude.toString(),
-                longitude = longitude.toString())
+                longitude = longitude.toString(),
+                user_id = user_id!!.toInt())
 
         call.enqueue(object : Callback<InsertincidentResponse>{
             override fun onResponse(call: Call<InsertincidentResponse>, response: Response<InsertincidentResponse>) {
@@ -127,7 +150,7 @@ class DashboardFragment : Fragment() {
             }
 
         })
-
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

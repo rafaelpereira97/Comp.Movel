@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,7 +10,7 @@
 
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/imagemIncidente"
         android:layout_width="match_parent"
         android:layout_height="161dp"
         tools:src="@tools:sample/backgrounds/scenic"
@@ -42,17 +43,34 @@
         android:singleLine="false"
         android:padding="5dp" />
 
-    <Button
-        android:id="@+id/sendIncidentButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/primaryColor"
-        android:elevation="4dp"
-        android:paddingLeft="70dp"
-        android:paddingRight="70dp"
-        android:text="Reportar"
-        android:textColor="#fff" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/primaryColor"
+            android:elevation="4dp"
+            android:paddingLeft="70dp"
+            android:paddingRight="70dp"
+            android:text="Editar"
+            android:textColor="#fff" />
+
+        <Button
+            android:id="@+id/deleteIncidentButton"
+            android:layout_width="209dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/primaryColor"
+            android:elevation="4dp"
+            android:paddingLeft="70dp"
+            android:paddingRight="70dp"
+            android:text="Apagar"
+            android:textColor="#fff" />
+    </LinearLayout>
 
 
 </LinearLayout>

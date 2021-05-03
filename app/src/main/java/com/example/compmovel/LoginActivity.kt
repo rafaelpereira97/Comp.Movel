@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.cmplacesapp.retrofit.ServiceBuilder
 import com.example.compmovel.models.ApiService
 import com.example.compmovel.models.LoginResponse
 import retrofit2.Call
@@ -21,7 +22,10 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val sharedPreference = getSharedPreferences("AUTH_PREFERENCES",Context.MODE_PRIVATE)
-        println(sharedPreference.getString("token","defaultName"))
+
+        if(sharedPreference.getString("token",null) != null){
+            startApp()
+        }
 
 
         setContentView(R.layout.activity_login)
@@ -38,14 +42,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun login(username: String, password: String){
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://172.16.188.152:8080/api/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-
-        val service = retrofit.create(ApiService::class.java)
-        val call = service.login(username = username, password = password)
+        val request = ServiceBuilder.buildService(ApiService::class.java)
+        val call = request.login(username = username, password = password)
 
         call.enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -56,6 +55,7 @@ class LoginActivity : AppCompatActivity() {
                             getSharedPreferences("AUTH_PREFERENCES", Context.MODE_PRIVATE)
                         val editor = sharedPreference.edit()
                         editor.putString("token", response.body()?.token)
+                        editor.putString("user_id", response.body()?.user_id)
                         editor.apply()
 
                         startApp()
